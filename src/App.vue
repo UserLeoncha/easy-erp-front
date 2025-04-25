@@ -1,27 +1,49 @@
 <template>
-  <el-config-provider :size="size" :z-index="zIndex">
-    <app />
-  </el-config-provider>
+  <div id="app">
+    <!-- 导航栏 -->
+    <el-menu :default-active="activeMenu" mode="horizontal" @select="handleMenuSelect">
+      <el-menu-item index="home">主页</el-menu-item>
+      <el-menu-item index="about">关于我们</el-menu-item>
+      <el-menu-item index="products">产品列表</el-menu-item>
+      <el-menu-item index="sales">销售记录</el-menu-item>
+    </el-menu>
+    <!-- 路由出口 -->
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-import { ElConfigProvider } from 'element-plus'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default defineComponent({
-  components: {
-    ElConfigProvider,
-  },
+export default {
+  name: 'App',
   setup() {
+    const router = useRouter();
+    const activeMenu = ref('home');
+
+    const handleMenuSelect = (key) => {
+      activeMenu.value = key;
+      if (key === 'home') {
+        router.push('/');
+      } else if (key === 'about') {
+        router.push('/about');
+      } else if (key === 'products') {
+        router.push('/products');
+      } else if (key === 'sales') {
+        router.push('/salelist');
+      }
+    };
+
     return {
-      zIndex: 3000,
-      size: 'small',
-    }
-  },
-})
+      activeMenu,
+      handleMenuSelect
+    };
+  }
+};
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -29,5 +51,9 @@ export default defineComponent({
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.el-menu {
+  margin-bottom: 20px;
 }
 </style>
